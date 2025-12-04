@@ -1,0 +1,164 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.carousel {
+				position: relative;
+				max-width: 100%;
+				overflow: hidden;
+			}
+			.carousel-container {
+				display: flex;
+				transition: transform 0.5s ease-in-out;
+			}
+			.carousel-slide {
+				min-width: 100%;
+				box-sizing: border-box;
+			}
+			.carousel-slide img {
+				width: 100%;
+				height: auto;
+				aspect-ratio: 15 / 10;
+				object-fit: cover;
+			}
+			.carousel-controls {
+				display: flex;
+				justify-content: center;
+				gap: 1em;
+			}
+			.carousel-btn {
+				background: rgb(22, 155, 71);
+				color: white;
+				border: none;
+				padding: 0.75em 1.5em;
+				cursor: pointer;
+				border-radius: 5px;
+				font-size: 1em;
+				transition: background 0.3s;
+			}
+			.carousel-btn:hover {
+				background: rgb(18, 125, 57);
+			}
+			.carousel-btn:disabled {
+				background: #ccc;
+				cursor: not-allowed;
+			}
+			.carousel-indicators {
+				display: flex;
+				justify-content: center;
+				gap: 0.5em;
+				margin-top: 1em;
+			}
+			.indicator {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				background: #ccc;
+				cursor: pointer;
+				transition: background 0.3s;
+			}
+			.indicator.active {
+				background: rgb(22, 155, 71);
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Ações</h1>
+			<div class="carousel">
+				<div class="carousel-container" id="carouselContainer">
+					<div class="carousel-slide">
+						<h3>Atividades Esportivas e Artísticas</h3>
+						<p>
+							O Projeto <strong>En-Hacoré</strong> oferece aulas de futsal, balé e música como ferramentas de desenvolvimento integral para crianças e adolescentes. No futsal, trabalhamos disciplina, trabalho em equipe e saúde física; no balé, estimulamos expressão corporal, coordenação e sensibilidade artística; e, na música, despertamos criatividade, ritmo e autoestima. Cada atividade é conduzida com cuidado e propósito, criando um ambiente seguro onde os participantes podem explorar talentos, fortalecer vínculos e descobrir novas formas de se expressar.
+						</p>
+						<img src="/acoes-futsal.png" alt="Ação Futsal" />
+					</div>
+					<div class="carousel-slide">
+						<h3>Palestras Formativas</h3>
+						<p>
+							O Projeto <strong>En-Hacoré</strong> promove palestras formativas voltadas para crianças, adolescentes e suas famílias, abordando temas essenciais como autoestima, prevenção, cidadania, convivência e proteção. Esses encontros são conduzidos por profissionais e convidados que compartilham conhecimento de forma acessível e acolhedora, fortalecendo valores, ampliando perspectivas e contribuindo para a construção de uma comunidade mais segura e consciente.
+						</p>
+						<img src="/acoes-palestra.png" alt="Ação Palestra" />
+					</div>
+					<div class="carousel-slide">
+						<h3>Parcerias Estratégicas</h3>
+						<p>
+							O Projeto <strong>En-Hacoré</strong> acredita na força do trabalho conjunto e, por isso, estabelece parcerias estratégicas com instituições como a Polícia Militar e outros órgãos e organizações comprometidos com a proteção e o desenvolvimento social. Essas colaborações fortalecem nossas ações de prevenção, segurança e cidadania, ampliando o alcance das atividades e garantindo apoio especializado para a comunidade. Juntos, construímos uma rede de cuidado que promove oportunidades, conscientização e transformação real na vida das crianças e adolescentes.
+						</p>
+						<img src="/acoes-policia.png" alt="Ação com Polícia" />
+					</div>
+				</div>
+				<div class="carousel-controls">
+					<button class="carousel-btn" id="prevBtn">← Anterior</button>
+					<button class="carousel-btn" id="nextBtn">Próximo →</button>
+				</div>
+				<div class="carousel-indicators">
+					<span class="indicator active" data-slide="0"></span>
+					<span class="indicator" data-slide="1"></span>
+					<span class="indicator" data-slide="2"></span>
+				</div>
+			</div>
+		</main>
+		<Footer />
+		<script>
+			let currentSlide = 0;
+			const slides = document.querySelectorAll('.carousel-slide');
+			const totalSlides = slides.length;
+			const container = document.getElementById('carouselContainer');
+			const prevBtn = document.getElementById('prevBtn');
+			const nextBtn = document.getElementById('nextBtn');
+			const indicators = document.querySelectorAll('.indicator');
+
+			if (!container || !prevBtn || !nextBtn) {
+				throw new Error('Required carousel elements not found');
+			}
+
+			function updateCarousel() {
+				container.style.transform = `translateX(-${currentSlide * 100}%)`;
+				
+				// Update indicators
+				indicators.forEach((ind, idx) => {
+					ind.classList.toggle('active', idx === currentSlide);
+				});
+
+				// Update button states
+				prevBtn.disabled = currentSlide === 0;
+				nextBtn.disabled = currentSlide === totalSlides - 1;
+			}
+
+			prevBtn.addEventListener('click', () => {
+				if (currentSlide > 0) {
+					currentSlide--;
+					updateCarousel();
+				}
+			});
+
+			nextBtn.addEventListener('click', () => {
+				if (currentSlide < totalSlides - 1) {
+					currentSlide++;
+					updateCarousel();
+				}
+			});
+
+			indicators.forEach(indicator => {
+				indicator.addEventListener('click', () => {
+					currentSlide = parseInt(indicator.getAttribute('data-slide'));
+					updateCarousel();
+				});
+			});
+
+			// Initialize
+			updateCarousel();
+		</script>
+	</body>
+</html>
