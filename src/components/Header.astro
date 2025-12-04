@@ -6,7 +6,12 @@ import { SITE_TITLE } from '../consts';
 <header>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
+		<button class="hamburger" id="hamburger" aria-label="Toggle menu">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+		<div class="internal-links" id="menu">
 			<HeaderLink href="/">Sobre o Projeto</HeaderLink>
 			<HeaderLink href="/acoes">Ações</HeaderLink>
 			<HeaderLink href="/about">Contato</HeaderLink>
@@ -54,6 +59,7 @@ import { SITE_TITLE } from '../consts';
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		position: relative;
 	}
 	nav a {
 		padding: 1em 0.5em;
@@ -69,9 +75,79 @@ import { SITE_TITLE } from '../consts';
 	.social-links a {
 		display: flex;
 	}
+	
+	.hamburger {
+		display: none;
+		flex-direction: column;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5em;
+		gap: 0.3em;
+	}
+	
+	.hamburger span {
+		display: block;
+		width: 25px;
+		height: 3px;
+		background: white;
+		border-radius: 2px;
+		transition: all 0.3s;
+	}
+	
+	.hamburger.active span:nth-child(1) {
+		transform: rotate(45deg) translate(5px, 5px);
+	}
+	
+	.hamburger.active span:nth-child(2) {
+		opacity: 0;
+	}
+	
+	.hamburger.active span:nth-child(3) {
+		transform: rotate(-45deg) translate(7px, -6px);
+	}
+	
 	@media (max-width: 720px) {
+		.hamburger {
+			display: flex;
+		}
+		
+		.internal-links {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: rgb(22, 155, 71);
+			flex-direction: column;
+			align-items: stretch;
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.3s ease-in-out;
+		}
+		
+		.internal-links.active {
+			max-height: 300px;
+		}
+		
+		.internal-links a {
+			padding: 1em;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+		
 		.social-links {
 			display: none;
 		}
 	}
 </style>
+
+<script>
+	const hamburger = document.getElementById('hamburger');
+	const menu = document.getElementById('menu');
+	
+	if (hamburger && menu) {
+		hamburger.addEventListener('click', () => {
+			hamburger.classList.toggle('active');
+			menu.classList.toggle('active');
+		});
+	}
+</script>
